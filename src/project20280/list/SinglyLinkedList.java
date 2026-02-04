@@ -215,12 +215,102 @@ public class SinglyLinkedList<E> implements List<E>, Iterable<E>{
         }
         sb.append("]");
         return sb.toString();
+
+        //Q9
+    }
+    public SinglyLinkedList<E> sortedMerge(SinglyLinkedList<E> list) {
+        Node<E> l2 = list.head;
+        Node<E> l1 = this.head;
+        SinglyLinkedList<E> mergedList = new SinglyLinkedList<E>();
+        while (l1 != null && l2 != null) {
+            Comparable<E> comp1 = (Comparable<E>) l1.getElement();
+            E elem2 = l2.getElement();
+            if (comp1.compareTo(elem2) <= 0) {
+                mergedList.addLast(l1.getElement());
+                l1 = l1.getNext();
+            } else {
+                mergedList.addLast(l2.getElement());
+                l2 = l2.getNext();
+            }
+        }
+        if(l1 != null) {
+            while (l1 != null) {
+                mergedList.addLast(l1.getElement());
+                l1 = l1.getNext();
+            }
+        }
+        if(l2 != null) {
+            while (l2 != null) {
+                mergedList.addLast(l2.getElement());
+                l2 = l2.getNext();
+            }
+        }
+        return mergedList;
+    }
+
+    //Q10
+
+    public void reverse() {
+        Node<E> prev = null;
+        Node<E> curr = head;
+        Node<E> next;
+
+        while (curr != null) {
+            next = curr.getNext();
+            curr.setNext(prev);
+            prev = curr;
+            curr = next;
+        }
+        head = prev;
+    }
+
+    //Q11
+    public SinglyLinkedList<E> clone() {
+        SinglyLinkedList<E> twin = new SinglyLinkedList<E>();
+        Node<E> tmp = head;
+        while (tmp != null) {
+            twin.addLast(tmp.getElement());
+            tmp = tmp.getNext();
+        }
+        return twin;
     }
 
     public static void main(String[] args) {
         SinglyLinkedList<Integer> ll = new SinglyLinkedList<Integer>();
         System.out.println("ll " + ll + " isEmpty: " + ll.isEmpty());
         //LinkedList<Integer> ll = new LinkedList<Integer>();
+
+        // Q9
+
+        SinglyLinkedList<Integer> l4 = new SinglyLinkedList<Integer>();
+        l4.addFirst(24);
+        l4.addFirst(20);
+        l4.addFirst(6);
+        l4.addFirst(2);
+
+        SinglyLinkedList<Integer> l3 = new SinglyLinkedList<Integer>();
+        l3.addFirst(25);
+        l3.addFirst(19);
+        l3.addFirst(12);
+        l3.addFirst(8);
+        l3.addFirst(5);
+        l3.addFirst(3);
+        l3.addFirst(1);
+
+        System.out.println(l3);
+        System.out.println(l4);
+
+       System.out.println(  l4.sortedMerge(l3));
+
+       //q10
+       System.out.println(l4);
+       l4.reverse();
+       System.out.println(l4);
+
+       //Q11
+       System.out.println(l4.clone());
+
+
 
         ll.addFirst(0);
         ll.addFirst(1);
@@ -238,3 +328,21 @@ public class SinglyLinkedList<E> implements List<E>, Iterable<E>{
 
     }
 }
+
+
+
+
+/*
+Q6. A singly linked list consists of nodes where each node points to the next node, and the last node points to null, indicating the end of the list.
+In a circularly linked list, the last node does not point to null; instead, it points back to the first node, forming a loop. This means there is no natural “end” to the list.
+
+Q7. A linked list is preferred when the size of the data structure needs to change frequently.
+
+Q8. A circularly linked list works well when people take turns, such as in a board game or group activity.
+After the last person takes their turn, it moves back to the first person without restarting the list.
+
+A circularly linked list can be used for a playlist where songs play one after another.
+When the last song finishes, the playlist automatically goes back to the first song and starts again.
+
+
+ */
