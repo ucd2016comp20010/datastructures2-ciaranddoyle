@@ -27,8 +27,10 @@ public abstract class AbstractTree<E> implements Tree<E> {
      */
     @Override
     public boolean isInternal(Position<E> p) {
-        // TODO
-        return false;
+        if (p == null){
+            throw new IllegalArgumentException("p must not be null");
+        }
+        return numChildren(p) > 0;
     }
 
     /**
@@ -40,8 +42,10 @@ public abstract class AbstractTree<E> implements Tree<E> {
      */
     @Override
     public boolean isExternal(Position<E> p) {
-        // TODO
-        return false;
+        if (p == null){
+            throw new IllegalArgumentException("p must not be null");
+        }
+        return numChildren(p) <= 0;
     }
 
     /**
@@ -52,8 +56,11 @@ public abstract class AbstractTree<E> implements Tree<E> {
      */
     @Override
     public boolean isRoot(Position<E> p) {
-        // TODO
-        return false;
+        if (p == null){
+            throw new IllegalArgumentException("p must not be null");
+        }
+
+        return p == root();
     }
 
     /**
@@ -65,8 +72,14 @@ public abstract class AbstractTree<E> implements Tree<E> {
      */
     @Override
     public int numChildren(Position<E> p) {
-        // TODO
-        return 0;
+        if (p == null){
+            throw new IllegalArgumentException("p must not be null");
+        }
+        int count = 0;
+            for(Position<E> child : children(p)){
+                count++;
+            }
+        return count;
     }
 
     /**
@@ -100,8 +113,12 @@ public abstract class AbstractTree<E> implements Tree<E> {
      * @throws IllegalArgumentException if p is not a valid Position for this tree.
      */
     public int depth(Position<E> p) throws IllegalArgumentException {
-        // TODO
-        return 0;
+        int depth = 0;
+        while (!isRoot(p)) {
+            p = parent(p);
+            depth++;
+        }
+        return depth;
     }
 
     /**
@@ -118,11 +135,14 @@ public abstract class AbstractTree<E> implements Tree<E> {
     }
 
     public int height_recursive(Position<E> p) {
-        // TODO
-        return 0;
+       int count = 0;
+        for(Position<E> child : children(p)){
+            count = Math.max(count, height_recursive(child));
+        }
+        return count + 1;
     }
 
-    /**
+    /*
      * Returns the height of the subtree rooted at Position p.
      *
      * @param p A valid Position within the tree
