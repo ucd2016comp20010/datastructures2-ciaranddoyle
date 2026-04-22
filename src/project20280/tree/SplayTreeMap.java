@@ -27,17 +27,34 @@ public class SplayTreeMap<K, V> extends TreeMap<K, V> {
      * Utility used to rebalance after a map operation.
      */
     private void splay(Position<Entry<K, V>> p) {
-        // TODO
-    }
+        while (!isRoot(p)) {
+            Position<Entry<K, V>> parent = parent(p);
+            Position<Entry<K, V>> grandparent = isRoot(parent) ? null : parent(parent);
 
+            if (grandparent == null) {
+                // zig — p's parent is root, single rotation
+                rotate(p);
+            } else if ((p == left(parent)) == (parent == left(grandparent))) {
+                // zig-zig — p and parent are on same side, rotate parent first then p
+                rotate(parent);
+                rotate(p);
+            } else {
+                // zig-zag — p and parent are on opposite sides, rotate p twice
+                rotate(p);
+                rotate(p);
+            }
+        }
+    }
     /**
      * Overrides the TreeMap rebalancing hook that is called after a node access.
      *
      * @param p
      */
     //@Override
+    @Override
     protected void rebalanceAccess(Position<Entry<K, V>> p) {
-        // TODO
+        if (isExternal(p)) p = parent(p);  // if sentinel leaf, splay its parent instead
+        if (p != null) splay(p);
     }
 
     /**
@@ -46,10 +63,11 @@ public class SplayTreeMap<K, V> extends TreeMap<K, V> {
      * @param p
      */
     //@Override
+    @Override
     protected void rebalanceInsert(Position<Entry<K, V>> p) {
-        // TODO
         splay(p);
     }
+
 
     /**
      * Overrides the TreeMap rebalancing hook that is called after a deletion.
@@ -57,8 +75,9 @@ public class SplayTreeMap<K, V> extends TreeMap<K, V> {
      * @param p
      */
     //@Override
+    @Override
     protected void rebalanceDelete(Position<Entry<K, V>> p) {
-        // TODO
+        if (p != null) splay(p);
     }
 
     public static void main(String[] args) {

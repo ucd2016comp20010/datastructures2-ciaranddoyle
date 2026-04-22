@@ -3,22 +3,22 @@ package project20280.tree;
 public class Fib {
     public static void main(String[] args) {
         Fib fib = new Fib();
-        int n = 10;
+        int n = 4;
         long timeTaken = 0;
         long start = 0;
          long end = 0;
          System.out.println("____Fib____");
-        while (timeTaken < 1000) {
-            start = System.currentTimeMillis();
+       // while (timeTaken < 10000) {
+            start = System.nanoTime();
             fib.fib(n);
-            end = System.currentTimeMillis();
+            end = System.nanoTime();
 
             timeTaken = end - start;
-            n++;
-        }
-        System.out.println("Time taken: " + timeTaken + "ms");
+           // n++;
+        //}
+        System.out.println("Time taken: " + timeTaken + "ns");
         System.out.println("n: " + n);
-
+        /*
         System.out.println("____Trib____");
         timeTaken = 0;
         while (timeTaken < 1000) {
@@ -31,7 +31,7 @@ public class Fib {
         }
         System.out.println("Time taken: " + timeTaken + "ms");
         System.out.println("n: " + n);
-
+*/
     }
     public int fib(int n) {
         if (n <= 1) return n;

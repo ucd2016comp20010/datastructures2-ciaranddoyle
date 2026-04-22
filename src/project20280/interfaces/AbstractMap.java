@@ -1,6 +1,8 @@
 package project20280.interfaces;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * An abstract base class to ease the implementation of the Map interface.
@@ -92,6 +94,14 @@ public abstract class AbstractMap<K, V> implements Map<K, V> {
     private class KeyIterable implements Iterable<K> {
         public Iterator<K> iterator() {
             return new KeyIterator();
+        }
+        @Override
+        public String toString() {
+            List<K> keys = new ArrayList<>();
+            for (K key : this) {
+                keys.add(key);
+            }
+            return keys.toString();
         }
     } // ----------- end of nested KeyIterable class -----------
 

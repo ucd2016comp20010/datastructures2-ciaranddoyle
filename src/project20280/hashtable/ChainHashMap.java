@@ -3,6 +3,7 @@ package project20280.hashtable;
 import project20280.interfaces.Entry;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /*
  * Map implementation using hash table with separate chaining.
@@ -52,8 +53,11 @@ public class ChainHashMap<K, V> extends AbstractHashMap<K, V> {
      */
     @Override
     protected V bucketGet(int h, K k) {
-        // TODO
-        return null;
+        UnsortedTableMap<K, V> bucket = table[h];
+        if (bucket == null) {
+            return null;
+        }
+        return bucket.get(k);
     }
 
     /**
@@ -67,8 +71,15 @@ public class ChainHashMap<K, V> extends AbstractHashMap<K, V> {
      */
     @Override
     protected V bucketPut(int h, K k, V v) {
-        // TODO
-        return null;
+        UnsortedTableMap<K, V> bucket = table[h];
+        if (bucket == null) {
+            bucket = table[h] = new UnsortedTableMap<>();
+        }
+        int oldSize = bucket.size();
+        V result = bucket.put(k, v);
+        n += (bucket.size() - oldSize);
+        return result;
+
     }
 
 
@@ -82,8 +93,14 @@ public class ChainHashMap<K, V> extends AbstractHashMap<K, V> {
      */
     @Override
     protected V bucketRemove(int h, K k) {
-        // TODO
-        return null;
+        UnsortedTableMap<K, V> bucket = table[h];
+        if (bucket == null) {
+            return null;
+        }
+        int oldSize = bucket.size();
+        V result = bucket.remove(k);
+        n -= (oldSize - bucket.size());
+        return result;
     }
 
     /**

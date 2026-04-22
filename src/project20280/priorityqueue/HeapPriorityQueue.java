@@ -1,11 +1,17 @@
 package project20280.priorityqueue;
 
 /*
+Q1
+
+
+  Q2
+
  */
 
 import project20280.interfaces.Entry;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 
 
@@ -43,40 +49,42 @@ public class HeapPriorityQueue<K, V> extends AbstractPriorityQueue<K, V> {
      * @param values an array of the initial values for the priority queue
      */
     public HeapPriorityQueue(K[] keys, V[] values) {
-        // TODO
+        super();
+        int n = Math.min(keys.length, values.length);
+        for (int j = 0; j < n; j++) {
+            heap.add(new PQEntry<>(keys[j], values[j]));
+        }
+        heapify();
     }
 
     // protected utilities
     protected int parent(int j) {
-        // TODO
-        return 0;
+        return (j - 1) / 2;
     }
 
     protected int left(int j) {
-        // TODO
-        return 0;
+        return 2 * j + 1;
     }
 
     protected int right(int j) {
-        // TODO
-        return 0;
+        return 2 * j + 2;
     }
 
     protected boolean hasLeft(int j) {
-        // TODO
-        return false;
+        return left(j) < heap.size();
     }
 
     protected boolean hasRight(int j) {
-        // TODO
-        return false;
+        return right(j) < heap.size();
     }
 
     /**
      * Exchanges the entries at indices i and j of the array list.
      */
     protected void swap(int i, int j) {
-        // TODO
+        Entry<K, V> temp = heap.get(i);
+        heap.set(i, heap.get(j));
+        heap.set(j, temp);
     }
 
     /**
@@ -84,21 +92,40 @@ public class HeapPriorityQueue<K, V> extends AbstractPriorityQueue<K, V> {
      * property.
      */
     protected void upheap(int j) {
-        // TODO
+        if (j == 0) return;
+        int p = parent(j);
+        if (compare(heap.get(j), heap.get(p)) < 0) {
+            swap(j, p);
+            upheap(p);
+        }
     }
 
     /**
      * Moves the entry at index j lower, if necessary, to restore the heap property.
      */
     protected void downheap(int j) {
-        // TODO
+        if (!hasLeft(j)) return;
+
+        int smallest = left(j);
+
+        if (hasRight(j) && compare(heap.get(right(j)), heap.get(smallest)) < 0) {
+            smallest = right(j);
+        }
+
+        if (compare(heap.get(j), heap.get(smallest)) > 0) {
+            swap(j, smallest);
+            downheap(smallest);
+        }
     }
 
     /**
      * Performs a bottom-up construction of the heap in linear time.
      */
     protected void heapify() {
-        // TODO
+        int startIndex = parent(heap.size() - 1);
+        for (int j = startIndex; j >= 0; j--) {
+            downheap(j);
+        }
     }
 
     // public methods
@@ -133,8 +160,10 @@ public class HeapPriorityQueue<K, V> extends AbstractPriorityQueue<K, V> {
      */
     @Override
     public Entry<K, V> insert(K key, V value) throws IllegalArgumentException {
-        // TODO
-        return null;
+        Entry<K, V> newest = new PQEntry<>(key, value);
+        heap.add(newest);
+        upheap(heap.size() - 1);
+        return newest;
     }
 
     /**
@@ -144,8 +173,12 @@ public class HeapPriorityQueue<K, V> extends AbstractPriorityQueue<K, V> {
      */
     @Override
     public Entry<K, V> removeMin() {
-        // TODO
-        return null;
+        if (heap.isEmpty()) return null;
+        Entry<K, V> min = heap.get(0);
+        swap(0, heap.size() - 1);
+        heap.remove(heap.size() - 1);
+        downheap(0);
+        return min;
     }
 
     public String toString() {
@@ -173,12 +206,29 @@ public class HeapPriorityQueue<K, V> extends AbstractPriorityQueue<K, V> {
             }
         }
     }
+    public static String toStringList(Integer[] list) {
+        StringBuilder sb = new StringBuilder();
+        for (Integer i : list) {
+            sb.append(i).append(", ");
+        }
+        return sb.toString();
+    }
+
+    public static <K extends Comparable<K>> void pqSort(ArrayList<K> list) {
+        HeapPriorityQueue<K, K> pq = new HeapPriorityQueue<>();
+        for (K item : list)  {
+            pq.insert(item, item);
+        }
+        for(int i = 0; i < list.size(); i++) {
+            list.set(i, pq.removeMin().getKey());
+        }
+    }
 
     public static void main(String[] args) {
         Integer[] rands = new Integer[]{35, 26, 15, 24, 33, 4, 12, 1, 23, 21, 2, 5};
         HeapPriorityQueue<Integer, Integer> pq = new HeapPriorityQueue<>(rands, rands);
 
-        System.out.println("elements: " + rands);
+        System.out.println("elements: " + toStringList(rands));
         System.out.println("after adding elements: " + pq);
 
         System.out.println("min element: " + pq.min());
@@ -189,5 +239,10 @@ public class HeapPriorityQueue<K, V> extends AbstractPriorityQueue<K, V> {
         //        2,            4,
         //   23,     21,      5, 12,
         // 24, 26, 35, 33, 15]
+
+        System.out.println(" ------------------------------------------------------- ");
+        ArrayList<Integer> list = new ArrayList<>(Arrays.asList(35, 26, 15, 24, 33, 4, 12));
+        pqSort(list);
+        System.out.println(list);
     }
 }
